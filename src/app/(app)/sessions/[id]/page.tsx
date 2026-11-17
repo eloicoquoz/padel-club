@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { getT } from "@/lib/i18n/server";
-import { fmt, formatDateTime, formatTime, joinNames } from "@/lib/i18n";
+import { fmt, formatDate, formatTime, joinNames } from "@/lib/i18n";
 import { balancedPairs, getSession } from "@/lib/services/sessions";
 import { getMatches } from "@/lib/services/matches";
 import { deleteSessionAction } from "@/lib/actions/app";
@@ -25,7 +25,7 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
 
   return (
     <>
-      <PageHeader title={formatDateTime(s.startsAt, locale)} back="/sessions" eyebrow={full ? t.sessions.full : t.sessions.open} />
+      <PageHeader title={formatDate(s.startsAt, locale, { weekday: "long", day: "numeric", month: "long" })} back="/sessions" eyebrow={full ? t.sessions.full : t.sessions.open} />
       <div className="text-[13px] text-muted -mt-2">
         {formatTime(s.startsAt, locale)} – {formatTime(new Date(s.startsAt.getTime() + s.durationMin * 60000), locale)}
         {s.location ? ` · ${s.location}` : ""} · {fmt(t.sessions.courts, { n: s.courts })}

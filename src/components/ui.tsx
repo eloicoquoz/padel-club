@@ -71,7 +71,7 @@ export function PageHeader({ title, eyebrow, back, right }: { title: string; eye
         )}
         <div className="min-w-0">
           {eyebrow && <div className="text-xs font-extrabold uppercase tracking-[0.12em] text-red-text">{eyebrow}</div>}
-          <h1 className="text-[28px] leading-tight font-black tracking-tight truncate">{title}</h1>
+          <h1 className="text-[28px] leading-tight font-black tracking-tight truncate first-letter:uppercase">{title}</h1>
         </div>
       </div>
       {right}
