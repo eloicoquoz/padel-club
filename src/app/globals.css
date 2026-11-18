@@ -35,6 +35,30 @@ html {
 body {
   font-family: var(--font-sans);
   min-height: 100dvh;
+  overflow-x: clip;
+  overscroll-behavior-y: none;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Pas de délai ni de double-tap zoom sur les contrôles (saisie des scores) */
+button,
+a,
+input,
+select {
+  touch-action: manipulation;
+}
+button {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Marges au-dessus de l'encoche / barre de statut en mode app installée */
+.safe-top {
+  padding-top: max(3.5rem, calc(env(safe-area-inset-top) + 1.25rem));
+}
+.safe-top-auth {
+  padding-top: max(4rem, calc(env(safe-area-inset-top) + 2rem));
 }
 
 input,

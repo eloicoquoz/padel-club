@@ -66,7 +66,7 @@ export default async function SessionsPage() {
               </div>
             </Link>
             <div className="flex items-center justify-between gap-3">
-              <AvatarStack people={s.players} size={34} max={6} />
+              <div className="min-w-0 overflow-hidden"><AvatarStack people={s.players} size={34} max={5} /></div>
               <JoinButton sessionId={s.id} joined={joined} full={full} compact />
             </div>
             {s.playtomicUrl && (

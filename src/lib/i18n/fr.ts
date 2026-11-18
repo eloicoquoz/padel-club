@@ -151,6 +151,7 @@ export const fr = {
     join: "Je viens",
     leave: "Je me retire",
     joined: "Inscrit · je viens",
+    joinedShort: "Inscrit",
     book: "Réserver les terrains sur Playtomic",
     pairsHint: "Paires équilibrées par Elo · 4 joueurs par terrain",
     upcoming: "À venir",

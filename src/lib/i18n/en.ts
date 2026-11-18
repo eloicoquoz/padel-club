@@ -153,6 +153,7 @@ export const en: Dict = {
     join: "I'm in",
     leave: "Pull out",
     joined: "In · I'm coming",
+    joinedShort: "I'm in",
     book: "Book the courts on Playtomic",
     pairsHint: "Pairs balanced by Elo · 4 players per court",
     upcoming: "Upcoming",

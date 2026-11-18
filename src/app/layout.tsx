@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { getT } from "@/lib/i18n/server";
 import { I18nProvider } from "@/lib/i18n/client";
+import { PwaRegister } from "@/components/pwa";
 
 export const metadata: Metadata = {
   title: "Padel Club · Fribourg-Gottéron",
@@ -31,6 +32,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <I18nProvider locale={locale} dict={t}>
           {children}
         </I18nProvider>
+        <PwaRegister />
       </body>
     </html>
   );

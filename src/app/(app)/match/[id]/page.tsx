@@ -98,7 +98,7 @@ export default async function MatchPage({ params, searchParams }: { params: Prom
   const confettiColors = ["#FFC53D", "#E63946", "#3B82F6", "#D4F53C", "#F5F5F7", "#FFC53D", "#E63946"];
 
   return (
-    <div className="relative -mx-5 -mt-14 px-6 pt-[72px] pb-32 min-h-dvh flex flex-col overflow-hidden">
+    <div className="relative -mx-5 px-6 pt-4 pb-32 min-h-dvh flex flex-col overflow-hidden">
       <div className={`pointer-events-none absolute -top-[200px] left-1/2 -ml-[260px] w-[520px] h-[520px] rounded-full ${won ? "bg-red opacity-[0.22]" : "bg-blue opacity-[0.14]"}`} />
       {won
         ? confettiColors.map((c, i) => (

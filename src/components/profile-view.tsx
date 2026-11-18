@@ -26,7 +26,7 @@ export async function ProfileView({ p, t, locale, isMe }: { p: PublicUser; t: Di
 
   return (
     <>
-      <div className="relative flex flex-col items-center gap-2 pt-2">
+      <div className="relative flex flex-col items-center gap-2 pt-2 -mx-5 px-5 overflow-hidden">
         <div className="pointer-events-none absolute -top-40 left-1/2 -ml-[200px] w-[400px] h-[400px] rounded-full bg-blue opacity-[0.14]" />
         <div className="relative">
           <Avatar name={p.name} color={p.color} size={92} ring="var(--color-gold)" />
@@ -98,7 +98,7 @@ export async function ProfileView({ p, t, locale, isMe }: { p: PublicUser; t: Di
               <div className="min-w-0">
                 <div className="text-[10px] font-extrabold uppercase tracking-wider text-red-text">{t.profile.nemesis}</div>
                 <div className="text-[13px] font-extrabold truncate">
-                  {stats.nemesis.user.name} · {stats.nemesis.wins} {t.common.wins} – {stats.nemesis.losses} {t.common.losses}
+                  {stats.nemesis.user.name} · {stats.nemesis.wins}–{stats.nemesis.losses}
                 </div>
               </div>
             </>

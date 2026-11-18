@@ -5,7 +5,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   await requireUser();
   return (
     <>
-      <main className="mx-auto w-full max-w-md px-5 pt-14 pb-32 flex flex-col gap-4">{children}</main>
+      <main className="safe-top mx-auto w-full max-w-md px-5 pb-32 flex flex-col gap-4">{children}</main>
       <BottomNav />
     </>
   );
