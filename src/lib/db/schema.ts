@@ -214,6 +214,21 @@ export const passwordResets = pgTable(
   (t) => [uniqueIndex("reset_token_idx").on(t.tokenHash)],
 );
 
+export type SeasonStanding = { userId: string; delta: number; wins: number; losses: number; elo: number };
+
+export const seasons = pgTable(
+  "seasons",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    month: text("month").notNull(), // "2026-11"
+    winnerId: uuid("winner_id").references(() => users.id),
+    standings: jsonb("standings").$type<SeasonStanding[]>().notNull().default([]),
+    matches: integer("matches").notNull().default(0),
+    closedAt: timestamp("closed_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("seasons_month_idx").on(t.month)],
+);
+
 export const usersRelations = relations(users, ({ many }) => ({
   badges: many(userBadges),
 }));

@@ -235,6 +235,42 @@ await step("change password from profile", async () => {
   await page.waitForURL(BASE + "/"); // Pierre n'est pas admin → redirigé
 });
 
+
+await step("seasons: month ranking + close month + cron", async () => {
+  await page.goto(BASE + "/profile");
+  await page.evaluate(() => { [...document.querySelectorAll("button")].find((b) => /Se déconnecter|Abmelden|Sign out/.test(b.textContent))?.click(); });
+  await page.waitForURL(/\/login/);
+  await page.fill("#email", "eloi@gotteron.ch");
+  await page.fill("#password", "padel1234");
+  await page.click('button[type="submit"]');
+  await page.waitForURL(BASE + "/");
+  await page.goto(BASE + "/ranking?view=month");
+  await page.waitForSelector("text=/Ce mois|Dieser Monat|This month/");
+  await page.screenshot({ path: `${shots}/16-ranking-month.png`, fullPage: true });
+  // Clôture du mois en cours via l'admin
+  await page.goto(BASE + "/admin");
+  await page.click("text=/Clôturer le mois en cours|Laufenden Monat|Close current month/");
+  await page.waitForSelector("text=/Mois clôturé|Monat abgeschlossen|Month closed/");
+  await page.goto(BASE + "/ranking");
+  await page.waitForSelector("text=/Palmarès|Ehrentafel|Hall of fame/");
+  await page.screenshot({ path: `${shots}/17-ranking-palmares.png`, fullPage: true });
+  // Idempotent
+  await page.goto(BASE + "/admin");
+  await page.click("text=/Clôturer le mois en cours|Laufenden Monat|Close current month/");
+  await page.waitForSelector("text=/Rien à clôturer|Nichts abzuschliessen|Nothing to close/");
+  // Route cron (mois précédent : aucun match → closed:false)
+  const res = await page.request.get(BASE + "/api/cron/close-month");
+  const json = await res.json();
+  if (typeof json.closed !== "boolean") throw new Error("cron route broken: " + JSON.stringify(json));
+  // Badge visible sur le profil du vainqueur (1er du classement du mois)
+  await page.goto(BASE + "/ranking?view=month");
+  await page.locator("a[href^='/profile/']").first().click();
+  await page.waitForSelector("text=/roi|reine|König|king/i");
+  // News sur la TV
+  await page.goto(BASE + "/tv");
+  await page.waitForSelector("text=/roi|reine|König|king/i");
+});
+
 await step("tv", async () => {
   const tv = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
   tv.on("pageerror", (e) => errors.push("tv pageerror: " + e.message));

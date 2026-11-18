@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { adminCreateResetAction, adminDeleteMatchAction, adminGrantMonthKingAction, adminRebuildAction, adminSetAdminAction } from "@/lib/actions/app";
+import { adminCloseMonthAction, adminCreateResetAction, adminDeleteMatchAction, adminRebuildAction, adminSetAdminAction } from "@/lib/actions/app";
 import { useT } from "@/lib/i18n/client";
 import { fmt, formatDate, formatTime, joinNames } from "@/lib/i18n";
 import { Avatar, Eyebrow, Icon, Pill } from "./ui";
@@ -9,7 +9,7 @@ import { Avatar, Eyebrow, Icon, Pill } from "./ui";
 type U = { id: string; name: string; email: string; color: string; elo: number; gamesPlayed: number; isAdmin: boolean; locale: string; pushCount: number };
 type M = { id: string; playedAt: Date; score: string; winner: "A" | "B"; names: { a: (string | undefined)[]; b: (string | undefined)[]; by?: string } };
 
-export function AdminPanel({ users, matches, meId, leaderId }: { users: U[]; matches: M[]; meId: string; leaderId: string | null }) {
+export function AdminPanel({ users, matches, meId }: { users: U[]; matches: M[]; meId: string }) {
   const { t, locale } = useT();
   const [pending, start] = useTransition();
   const [toast, setToast] = useState<string | null>(null);
@@ -106,15 +106,24 @@ export function AdminPanel({ users, matches, meId, leaderId }: { users: U[]; mat
           {t.admin.rebuild}
         </button>
         <div className="text-xs text-muted text-center">{t.admin.rebuildHint}</div>
-        {leaderId && (
-          <>
-            <button type="button" disabled={pending} onClick={() => start(() => adminGrantMonthKingAction(leaderId))} className="btn bg-amber-bg border border-[#7C3F10] text-amber h-12 text-[15px] mt-2">
-              <Icon name="crown" size={18} />
-              {t.admin.monthKing}
-            </button>
-            <div className="text-xs text-muted text-center">{t.admin.monthKingHint}</div>
-          </>
-        )}
+        <button
+          type="button"
+          disabled={pending}
+          onClick={() => start(async () => { const r = await adminCloseMonthAction("previous"); setToast(r.closed ? t.seasons.closed : t.seasons.nothing); setTimeout(() => setToast(null), 6000); })}
+          className="btn bg-amber-bg border border-[#7C3F10] text-amber h-12 text-[15px] mt-2"
+        >
+          <Icon name="crown" size={18} />
+          {t.seasons.closePrev}
+        </button>
+        <button
+          type="button"
+          disabled={pending}
+          onClick={() => start(async () => { const r = await adminCloseMonthAction("current"); setToast(r.closed ? t.seasons.closed : t.seasons.nothing); setTimeout(() => setToast(null), 6000); })}
+          className="btn bg-surface border border-border-2 text-muted h-11 text-sm"
+        >
+          {t.seasons.closeCur}
+        </button>
+        <div className="text-xs text-muted text-center">{t.seasons.closeHint}</div>
       </section>
     </div>
   );

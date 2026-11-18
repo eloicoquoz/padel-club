@@ -6,6 +6,7 @@ import { getMatches } from "@/lib/services/matches";
 import { upcomingSessions } from "@/lib/services/sessions";
 import { openChallenges } from "@/lib/services/challenges";
 import { renderRecentNews } from "@/lib/services/events";
+import { listSeasons, monthDate, monthKey, monthStandings } from "@/lib/services/seasons";
 import { Avatar, AvatarStack, Icon, Pill } from "@/components/ui";
 import { tagLabel } from "@/components/match-row";
 import { Ball } from "@/components/brand";
@@ -18,7 +19,7 @@ export default async function TvPage({ searchParams }: { searchParams: Promise<{
   const locale: Locale = isLocale(sp.lang) ? sp.lang : isLocale(process.env.TEAMS_LANG) ? process.env.TEAMS_LANG : "fr";
   const t = getDict(locale);
   const db = await getDb();
-  const [ranking, recent, sessions, challenges, news, monthStats] = await Promise.all([
+  const [ranking, recent, sessions, challenges, news, monthStats, seasons, month] = await Promise.all([
     getRanking(),
     getMatches({ limit: 6, sinceDays: 7 }),
     upcomingSessions(1),
@@ -31,12 +32,22 @@ export default async function TvPage({ searchParams }: { searchParams: Promise<{
       })
       .from(schema.matches)
       .where(sql`date_trunc('month', ${schema.matches.playedAt}) = date_trunc('month', now())`),
+    listSeasons(1),
+    monthStandings(monthKey()),
   ]);
+  // Roi/Reine : le dernier mois clôturé s'il existe, sinon le leader du mois en cours.
+  const lastSeason = seasons[0]?.winner ? seasons[0] : null;
+  const kingUser = lastSeason?.winner ?? month.rows[0]?.user ?? ranking[0] ?? null;
+  const kingLabel = lastSeason ? formatMonth(monthDate(lastSeason.month), locale) : formatMonth(new Date(), locale);
+  const kingSub = lastSeason
+    ? `${(lastSeason.standings[0]?.delta ?? 0) > 0 ? "+" : ""}${lastSeason.standings[0]?.delta ?? 0} Elo · ${lastSeason.standings[0]?.wins ?? 0} ${t.common.wins} · ${lastSeason.standings[0]?.losses ?? 0} ${t.common.losses}`
+    : month.rows[0]
+      ? `${month.rows[0].delta > 0 ? "+" : ""}${month.rows[0].delta} Elo · ${month.rows[0].wins} ${t.common.wins} · ${month.rows[0].losses} ${t.common.losses}`
+      : "";
   const top10 = ranking.slice(0, 10);
   const matchOfDay = recent[0];
   const next = sessions[0];
   const bestStreak = [...ranking].sort((a, b) => b.bestStreak - a.bestStreak)[0];
-  const king = ranking[0];
   const lastMonth = new Date();
   lastMonth.setDate(0);
   const newsText = news.map((n) => n.text);
@@ -187,18 +198,16 @@ export default async function TvPage({ searchParams }: { searchParams: Promise<{
             )}
           </div>
 
-          {king && (
+          {kingUser && (
             <div className="flex items-center gap-[1vw] rounded-[1.5vw] bg-amber-bg border border-[#7C3F10] p-[1.2vw]">
               <div className="relative shrink-0">
-                <Avatar name={king.name} color={king.color} size={76} ring="#FFC53D" />
+                <Avatar name={kingUser.name} color={kingUser.color} size={76} ring="#FFC53D" />
                 <Icon name="crown" size={36} className="text-gold absolute -top-5 left-5" />
               </div>
               <div className="min-w-0">
-                <div className="text-[0.8em] font-extrabold tracking-[0.14em] uppercase text-amber">{fmt(t.tv.kingOfMonth, { month: formatMonth(new Date(), locale) })}</div>
-                <div className="text-[1.7em] font-black tracking-tight leading-tight truncate">{king.name}</div>
-                <div className="text-[0.85em] text-muted">
-                  {king.wins} {t.common.wins} · {king.losses} {t.common.losses} · {king.elo} Elo
-                </div>
+                <div className="text-[0.8em] font-extrabold tracking-[0.14em] uppercase text-amber">{fmt(t.tv.kingOfMonth, { month: kingLabel })}</div>
+                <div className="text-[1.7em] font-black tracking-tight leading-tight truncate">{kingUser.name}</div>
+                <div className="text-[0.85em] text-muted">{kingSub}</div>
               </div>
             </div>
           )}

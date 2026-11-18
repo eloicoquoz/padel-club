@@ -22,6 +22,13 @@
       "when": 1795035583920,
       "tag": "0002_password_resets",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1795036681947,
+      "tag": "0003_seasons",
+      "breakpoints": true
     }
   ]
 }

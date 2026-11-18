@@ -245,12 +245,11 @@ export async function adminRebuildAction() {
   revalidatePath("/", "layout");
 }
 
-export async function adminGrantMonthKingAction(userId: string) {
+export async function adminCloseMonthAction(which: "previous" | "current"): Promise<{ closed: boolean }> {
   await requireAdmin();
-  const { grantBadge } = await import("@/lib/services/admin");
-  const { addEvent } = await import("@/lib/services/events");
-  await grantBadge(userId, "month_king");
-  const month = new Intl.DateTimeFormat("fr-CH", { month: "long", year: "numeric" }).format(new Date());
-  await addEvent("month_king", { userId, month });
+  const { closeMonth, monthKey, previousMonthKey } = await import("@/lib/services/seasons");
+  const key = which === "previous" ? previousMonthKey() : monthKey();
+  const s = await closeMonth(key);
   revalidatePath("/", "layout");
+  return { closed: Boolean(s) };
 }

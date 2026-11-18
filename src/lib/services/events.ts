@@ -1,7 +1,7 @@
 import { desc } from "drizzle-orm";
 import { getDb, schema } from "@/lib/db";
 import type { EventType, Event } from "@/lib/db/schema";
-import { fmt, formatDate, formatTime, joinNames, getDict, type Locale } from "@/lib/i18n";
+import { fmt, formatDate, formatMonth, formatTime, joinNames, getDict, type Locale } from "@/lib/i18n";
 import { getUsersMap, type PublicUser } from "./users";
 import { isBadgeKey } from "@/lib/badges";
 
@@ -77,8 +77,11 @@ export function renderEvent(e: Event, locale: Locale, users: Map<string, PublicU
       return fmt(t.news.challenge_declined, { from: names(p.from), to: names(p.to) });
     case "americano_finished":
       return fmt(t.news.americano_finished, { name: String(p.name ?? ""), winner: n(p.winnerId) });
-    case "month_king":
-      return fmt(t.news.month_king, { name: n(p.userId), month: String(p.month ?? "") });
+    case "month_king": {
+      const m = String(p.month ?? "");
+      const label = /^\d{4}-\d{2}$/.test(m) ? formatMonth(new Date(Date.UTC(Number(m.slice(0, 4)), Number(m.slice(5, 7)) - 1, 15)), locale) : m;
+      return fmt(t.news.month_king, { name: n(p.userId), month: label });
+    }
     default:
       return "";
   }
