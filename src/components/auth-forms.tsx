@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { loginAction, registerAction, type AuthState } from "@/lib/actions/auth";
+import { loginAction, registerAction, resetPasswordAction, type AuthState } from "@/lib/actions/auth";
 import { useT } from "@/lib/i18n/client";
 
 function ErrorBox({ state }: { state: AuthState }) {
@@ -29,6 +29,9 @@ export function LoginForm() {
       <button type="submit" disabled={pending} className="btn bg-red text-white mt-2">
         {t.auth.login}
       </button>
+      <Link href="/forgot" className="self-center text-sm text-muted py-1.5">
+        {t.account.forgotTitle} ?
+      </Link>
       <div className="mt-auto pt-8 flex flex-col gap-3">
         <div className="flex items-center gap-3 text-xs text-dim">
           <div className="flex-1 h-px bg-border-2" />
@@ -80,6 +83,24 @@ export function RegisterForm() {
           {t.auth.login}
         </Link>
       </div>
+    </form>
+  );
+}
+
+export function ResetForm({ token }: { token: string }) {
+  const { t } = useT();
+  const [state, action, pending] = useActionState(resetPasswordAction, null);
+  return (
+    <form action={action} className="flex flex-col gap-3.5">
+      <ErrorBox state={state} />
+      <input type="hidden" name="token" value={token} />
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="password" className="label">{t.account.next}</label>
+        <input id="password" name="password" type="password" autoComplete="new-password" required minLength={8} className="field" />
+      </div>
+      <button type="submit" disabled={pending} className="btn bg-red text-white mt-2">
+        {t.account.resetSubmit}
+      </button>
     </form>
   );
 }

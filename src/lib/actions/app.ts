@@ -189,3 +189,68 @@ export async function removePushSubscriptionAction(endpoint: string) {
   await removeSubscription(endpoint);
   return { ok: true };
 }
+
+// ---------- Mot de passe ----------
+export async function changePasswordAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const user = await requireUser();
+  const current = String(formData.get("current") ?? "");
+  const next = String(formData.get("next") ?? "");
+  if (next.length < 8) return { error: "weak" };
+  const { verifyPassword } = await import("@/lib/auth");
+  if (!(await verifyPassword(current, user.passwordHash))) return { error: "invalid" };
+  const { setPassword } = await import("@/lib/services/admin");
+  await setPassword(user.id, next);
+  return { error: undefined };
+}
+
+// ---------- Admin ----------
+async function requireAdmin() {
+  const user = await requireUser();
+  if (!user.isAdmin) redirect("/");
+  return user;
+}
+
+export async function adminCreateResetAction(userId: string): Promise<{ url: string }> {
+  const admin = await requireAdmin();
+  const { createResetToken } = await import("@/lib/services/admin");
+  const token = await createResetToken(userId, admin.id);
+  let base = (process.env.APP_URL ?? "").replace(/\/$/, "");
+  if (!base) {
+    const { headers } = await import("next/headers");
+    const h = await headers();
+    base = `${h.get("x-forwarded-proto") ?? "http"}://${h.get("host") ?? "localhost:3000"}`;
+  }
+  return { url: `${base}/reset?token=${token}` };
+}
+
+export async function adminSetAdminAction(userId: string, isAdmin: boolean) {
+  const admin = await requireAdmin();
+  if (userId === admin.id && !isAdmin) return; // on ne se retire pas soi-même
+  const { setAdmin } = await import("@/lib/services/admin");
+  await setAdmin(userId, isAdmin);
+  revalidatePath("/admin");
+}
+
+export async function adminDeleteMatchAction(matchId: string) {
+  await requireAdmin();
+  const { deleteMatch } = await import("@/lib/services/admin");
+  await deleteMatch(matchId);
+  revalidatePath("/", "layout");
+}
+
+export async function adminRebuildAction() {
+  await requireAdmin();
+  const { rebuildRatings } = await import("@/lib/services/admin");
+  await rebuildRatings();
+  revalidatePath("/", "layout");
+}
+
+export async function adminGrantMonthKingAction(userId: string) {
+  await requireAdmin();
+  const { grantBadge } = await import("@/lib/services/admin");
+  const { addEvent } = await import("@/lib/services/events");
+  await grantBadge(userId, "month_king");
+  const month = new Intl.DateTimeFormat("fr-CH", { month: "long", year: "numeric" }).format(new Date());
+  await addEvent("month_king", { userId, month });
+  revalidatePath("/", "layout");
+}

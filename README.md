@@ -65,6 +65,8 @@ Copier `.env.example` en `.env.local` pour le dev.
 | Americano           | `/americano`        | Tours générés automatiquement, points par match, classement du soir    |
 | Profil              | `/profile`          | Stats, meilleur duo, némésis, badges, langue, niveau Playtomic         |
 | Écran TV            | `/tv?lang=fr`       | Public (sans login), 1920×1080, rafraîchi toutes les 60 s               |
+| Admin               | `/admin`            | Admins : liens de réinitialisation de mot de passe (48 h), droits admin, suppression d'un match avec recalcul complet des Elo, badge roi/reine du mois |
+| Mot de passe        | `/forgot` `/reset`  | Pas d'e-mail : un admin génère un lien de réinitialisation ; changement de mot de passe dans le profil |
 
 ### Elo double
 

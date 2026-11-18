@@ -83,3 +83,19 @@ export async function setLocaleAction(locale: string) {
     await db.update(schema.users).set({ locale }).where(eq(schema.users.id, user.id));
   }
 }
+
+/** Réinitialisation par lien (token généré par un admin). */
+export async function resetPasswordAction(_prev: AuthState, formData: FormData): Promise<AuthState> {
+  const token = String(formData.get("token") ?? "");
+  const password = String(formData.get("password") ?? "");
+  if (password.length < 8) return { error: "weak" };
+  const { consumeReset } = await import("@/lib/services/admin");
+  let userId: string;
+  try {
+    userId = await consumeReset(token, password);
+  } catch {
+    return { error: "invalid" };
+  }
+  await setSessionCookie(userId);
+  redirect("/");
+}

@@ -182,6 +182,59 @@ await step("profile + language switch", async () => {
   await page.waitForSelector("text=Mon profil", { timeout: 10000 });
 });
 
+
+await step("admin: reset link → new password → login", async () => {
+  await page.goto(BASE + "/admin");
+  await page.waitForSelector("h1:has-text('Admin')");
+  await page.screenshot({ path: `${shots}/15-admin.png`, fullPage: true });
+  // Lien de reset pour "Pierre" (lecture du presse-papiers via l'URL affichée en fallback)
+  await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
+  const row = page.locator(".card", { hasText: "Pierre" }).first();
+  await row.locator("button:has-text('Lien de réinit.')").click();
+  await page.waitForTimeout(800);
+  const url = await page.evaluate(() => navigator.clipboard.readText());
+  if (!/\/reset\?token=/.test(url)) throw new Error("no reset url: " + url);
+  const resetUrl = url.startsWith("/") ? BASE + url : url.replace(/^https?:\/\/[^/]+/, BASE);
+  // Supprimer le dernier match et recalculer
+  const before = await page.locator(".card:has(button:has-text('Supprimer'))").count();
+  await page.locator("button:has-text('Supprimer')").first().click();
+  await page.locator("button:has-text('Oui')").first().click();
+  await page.waitForTimeout(2500);
+  const after = await page.locator(".card:has(button:has-text('Supprimer'))").count();
+  if (after !== before - 1) throw new Error(`delete failed ${before}→${after}`);
+  // Déconnexion puis reset
+  await page.goto(BASE + "/profile");
+  await page.click("text=Se déconnecter");
+  await page.waitForURL(/\/login/);
+  await page.goto(resetUrl);
+  await page.waitForSelector("text=Pour le compte de Pierre");
+  await page.fill("#password", "nouveau123");
+  await page.click("text=Enregistrer et me connecter");
+  await page.waitForURL(BASE + "/");
+  await page.waitForSelector("text=/Salut Pierre|Hoi Pierre|Hey Pierre/");
+  // Lien déjà utilisé → invalide
+  await page.goto(BASE + "/profile");
+  await page.evaluate(() => { [...document.querySelectorAll("button")].find((b) => /Se déconnecter|Abmelden|Sign out/.test(b.textContent))?.click(); });
+  await page.waitForURL(/\/login/);
+  await page.goto(resetUrl);
+  await page.waitForSelector("text=/plus valable|nicht mehr gültig|no longer valid/");
+});
+
+await step("change password from profile", async () => {
+  await page.goto(BASE + "/login");
+  await page.fill("#email", "pierre@gotteron.ch");
+  await page.fill("#password", "nouveau123");
+  await page.click('button[type="submit"]');
+  await page.waitForURL(BASE + "/");
+  await page.goto(BASE + "/profile");
+  await page.fill("#current", "nouveau123");
+  await page.fill("#next", "padel1234");
+  await page.locator("form:has(#current) button[type=submit]").click();
+  await page.waitForSelector("text=/Mot de passe modifié|Passwort geändert|Password changed/");
+  await page.goto(BASE + "/admin");
+  await page.waitForURL(BASE + "/"); // Pierre n'est pas admin → redirigé
+});
+
 await step("tv", async () => {
   const tv = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
   tv.on("pageerror", (e) => errors.push("tv pageerror: " + e.message));
