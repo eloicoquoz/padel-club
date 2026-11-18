@@ -3,7 +3,9 @@ import { getDb, schema } from "@/lib/db";
 import type { Challenge, ChallengeStatus } from "@/lib/db/schema";
 import { getUsersMap, type PublicUser } from "./users";
 import { addEvent } from "./events";
+import { background } from "@/lib/background";
 import { forecast } from "@/lib/elo";
+import { pushChallengeAnswered, pushChallengeReceived } from "./push";
 
 export type ChallengeView = Challenge & {
   from: PublicUser[];
@@ -59,6 +61,8 @@ export async function createChallenge(input: { from1: string; from2?: string | n
     to: [c.to1, c.to2].filter(Boolean),
     message: c.message ?? "",
   });
+  const users = await getUsersMap([c.from1, c.from2].filter((x): x is string => !!x));
+  background(() => pushChallengeReceived([c.to1, c.to2].filter((x): x is string => !!x), [...users.values()].map((u) => u.name), c.message, c.id));
   return c;
 }
 
@@ -73,6 +77,8 @@ export async function respondChallenge(id: string, userId: string, status: Extra
     from: [c.from1, c.from2].filter(Boolean),
     to: [c.to1, c.to2].filter(Boolean),
   });
+  const toUsers = await getUsersMap([c.to1, c.to2].filter((x): x is string => !!x));
+  background(() => pushChallengeAnswered([c.from1, c.from2].filter((x): x is string => !!x), [...toUsers.values()].map((u) => u.name), status === "accepted", reply ?? null));
 }
 
 export async function markChallengePlayed(id: string, matchId: string) {

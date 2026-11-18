@@ -35,6 +35,7 @@ Code d'invitation par défaut : `GOTTERON`. Le premier compte créé est admin.
 | `TEAMS_WEBHOOK_URL`  | Webhook entrant Teams (Workflows). Absente → pas de post.                                  |
 | `TEAMS_LANG`         | Langue des posts Teams et de l'écran TV par défaut : `fr` / `de` / `en`.                   |
 | `DEFAULT_LOCATION`   | Lieu pré-rempli quand on crée une session (ex. nom du centre de padel).                    |
+| `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` / `VAPID_SUBJECT` | Notifications push (`npx web-push generate-vapid-keys`). Absentes → pas de push, le profil le dit. |
 
 Copier `.env.example` en `.env.local` pour le dev.
 

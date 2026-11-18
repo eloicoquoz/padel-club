@@ -173,3 +173,19 @@ export async function deleteTournamentAction(id: string) {
   await deleteTournament(id, user.id, user.isAdmin);
   redirect("/americano");
 }
+
+// ---------- Notifications push ----------
+export async function savePushSubscriptionAction(sub: { endpoint: string; keys: { p256dh: string; auth: string } }, userAgent?: string) {
+  const user = await requireUser();
+  if (!sub?.endpoint || !sub.keys?.p256dh || !sub.keys?.auth) return { ok: false };
+  const { saveSubscription } = await import("@/lib/services/push");
+  await saveSubscription(user.id, sub, userAgent);
+  return { ok: true };
+}
+
+export async function removePushSubscriptionAction(endpoint: string) {
+  await requireUser();
+  const { removeSubscription } = await import("@/lib/services/push");
+  await removeSubscription(endpoint);
+  return { ok: true };
+}

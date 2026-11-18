@@ -4,8 +4,10 @@ import type { SetScore, User } from "@/lib/db/schema";
 import { computeElo, evaluateSets, formatSets } from "@/lib/elo";
 import type { BadgeKey } from "@/lib/badges";
 import { addEvent } from "./events";
+import { background } from "@/lib/background";
 import { getRanking, getUsersMap, rankOf, type PublicUser } from "./users";
 import { postToTeams, appUrl } from "./teams";
+import { pushMatchRecorded } from "./push";
 import { getDict, isLocale, joinNames, type Locale } from "@/lib/i18n";
 
 export type RecordMatchInput = {
@@ -210,8 +212,11 @@ export async function recordMatch(input: RecordMatchInput, by: User): Promise<Re
     }
   }
 
+  // Push aux 3 autres joueurs (celui qui saisit le sait déjà)
+  background(() => pushMatchRecorded(ids.filter((id) => id !== by.id), winners.map((p) => p.name), losers.map((p) => p.name), score, result.id));
+
   // Teams (fire & forget)
-  void notifyTeams({ winners, losers, score, tags, delta: Math.abs(deltaA), rankingBefore, rankingAfter, leaderBefore, leaderAfter });
+  background(() => notifyTeams({ winners, losers, score, tags, delta: Math.abs(deltaA), rankingBefore, rankingAfter, leaderBefore, leaderAfter }));
 
   return { matchId: result.id, winner, deltaA, deltaB, newBadges, tags };
 }

@@ -285,6 +285,16 @@ export const fr = {
     season: "Saison",
     noMatchYet: "Aucun match aujourd'hui… encore.",
   },
+  push: {
+    title: "Notifications",
+    enable: "Activer",
+    disable: "Désactiver",
+    onHint: "Défis, réponses, sessions et matchs saisis.",
+    offHint: "Reçois un push quand on te défie ou qu'une session est proposée.",
+    needsInstall: "Sur iPhone : ajoute d'abord l'app à l'écran d'accueil (Partager → Sur l'écran d'accueil).",
+    unsupported: "Non disponible sur ce navigateur.",
+    denied: "Bloquées dans les réglages du navigateur.",
+  },
   dates: { at: "à" },
 };
 

@@ -287,5 +287,15 @@ export const en: Dict = {
     season: "Season",
     noMatchYet: "No match today… yet.",
   },
+  push: {
+    title: "Notifications",
+    enable: "Enable",
+    disable: "Disable",
+    onHint: "Challenges, replies, sessions and logged matches.",
+    offHint: "Get a push when you're challenged or a session is proposed.",
+    needsInstall: "On iPhone, add the app to your Home Screen first (Share → Add to Home Screen).",
+    unsupported: "Not available in this browser.",
+    denied: "Blocked in your browser settings.",
+  },
   dates: { at: "at" },
 };

@@ -3,6 +3,9 @@ import { getDb, schema } from "@/lib/db";
 import type { Session } from "@/lib/db/schema";
 import { getUsersMap, type PublicUser } from "./users";
 import { addEvent } from "./events";
+import { background } from "@/lib/background";
+import { pushSessionCreated } from "./push";
+import { formatDate, formatTime } from "@/lib/i18n";
 
 export type SessionView = Session & {
   players: PublicUser[];
@@ -70,6 +73,8 @@ export async function createSession(input: {
   // L'organisateur est inscrit d'office.
   await db.insert(schema.sessionPlayers).values({ sessionId: s.id, userId: input.createdBy }).onConflictDoNothing();
   await addEvent("session_created", { sessionId: s.id, startsAt: s.startsAt.toISOString(), places: s.courts * 4 });
+  const others = (await db.select({ id: schema.users.id }).from(schema.users)).map((u) => u.id).filter((id) => id !== input.createdBy);
+  background(() => pushSessionCreated(others, (l) => `${formatDate(s.startsAt, l, { weekday: "long", day: "numeric", month: "short" })} ${formatTime(s.startsAt, l)}`, s.courts * 4, s.id));
   return s;
 }
 

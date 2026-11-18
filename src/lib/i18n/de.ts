@@ -287,5 +287,15 @@ export const de: Dict = {
     season: "Saison",
     noMatchYet: "Heute noch kein Spiel… noch nicht.",
   },
+  push: {
+    title: "Benachrichtigungen",
+    enable: "Aktivieren",
+    disable: "Deaktivieren",
+    onHint: "Herausforderungen, Antworten, Sessions und erfasste Spiele.",
+    offHint: "Erhalte einen Push bei Herausforderungen oder neuen Sessions.",
+    needsInstall: "Auf dem iPhone zuerst die App zum Home-Bildschirm hinzufügen (Teilen → Zum Home-Bildschirm).",
+    unsupported: "In diesem Browser nicht verfügbar.",
+    denied: "In den Browser-Einstellungen blockiert.",
+  },
   dates: { at: "um" },
 };

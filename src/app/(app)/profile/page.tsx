@@ -3,6 +3,7 @@ import { getT } from "@/lib/i18n/server";
 import { ProfileView } from "@/components/profile-view";
 import { ProfileForm } from "@/components/profile-form";
 import { Eyebrow } from "@/components/ui";
+import { PushToggle } from "@/components/push-toggle";
 
 export default async function MyProfilePage() {
   const user = await requireUser();
@@ -13,6 +14,7 @@ export default async function MyProfilePage() {
         <Eyebrow>{t.profile.title}</Eyebrow>
       </div>
       <ProfileView p={user} t={t} locale={locale} isMe />
+      <PushToggle publicKey={process.env.VAPID_PUBLIC_KEY ?? null} />
       <ProfileForm user={user} />
     </>
   );
