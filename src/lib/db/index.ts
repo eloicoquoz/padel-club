@@ -13,14 +13,29 @@ declare global {
 
 async function createDb(): Promise<DB> {
   // DATABASE_URL, sinon les variables injectées par les intégrations Vercel (Supabase / Neon).
-  const url = process.env.DATABASE_URL ?? process.env.POSTGRES_URL ?? process.env.POSTGRES_PRISMA_URL;
+  // Connexion DIRECTE de préférence (session mode) : le pooler transactionnel (Supavisor) a
+  // montré des blocages avec les fonctions serverless. Avec max=1 par instance, on reste
+  // très loin de la limite de connexions.
+  const url =
+    process.env.DATABASE_URL ??
+    process.env.POSTGRES_URL_NON_POOLING ??
+    process.env.POSTGRES_URL ??
+    process.env.POSTGRES_PRISMA_URL;
 
   if (url) {
     // Production / staging : Postgres (Supabase, Neon, Vercel Postgres…)
     const { drizzle } = await import("drizzle-orm/postgres-js");
     const postgres = (await import("postgres")).default;
     // Serverless : une connexion par instance, timeouts courts, pas de prepared statements (pooler).
-    const client = postgres(url, { max: 1, prepare: false, idle_timeout: 20, connect_timeout: 10 });
+    const client = postgres(url, {
+      max: 1,
+      prepare: false,
+      idle_timeout: 20,
+      max_lifetime: 60 * 5,
+      connect_timeout: 10,
+      // Auto-guérison côté serveur : aucune requête ni transaction ne peut rester coincée.
+      connection: { statement_timeout: 15000, idle_in_transaction_session_timeout: 15000 },
+    });
     const db = drizzle(client, { schema });
     // Les migrations ne sont JAMAIS appliquées au démarrage en prod (verrous entre instances
     // concurrentes) : elles tournent au build via `npm run db:migrate` (voir package.json).
