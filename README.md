@@ -35,7 +35,6 @@ Code d'invitation par défaut : `GOTTERON`. Le premier compte créé est admin.
 | `TEAMS_WEBHOOK_URL`  | Webhook entrant Teams (Workflows). Absente → pas de post.                                  |
 | `TEAMS_LANG`         | Langue des posts Teams et de l'écran TV par défaut : `fr` / `de` / `en`.                   |
 | `DEFAULT_LOCATION`   | Lieu pré-rempli quand on crée une session (ex. nom du centre de padel).                    |
-| `AUTO_MIGRATE`       | `1` pour appliquer les migrations au démarrage (pratique sur Vercel, voir ci-dessous).     |
 
 Copier `.env.example` en `.env.local` pour le dev.
 
@@ -44,11 +43,10 @@ Copier `.env.example` en `.env.local` pour le dev.
 1. Créer une base Postgres (Supabase gratuit suffit largement) et récupérer `DATABASE_URL`
    (chaîne « connection pooling / transaction » si disponible).
 2. Pousser le repo sur GitHub, importer le projet dans Vercel.
-3. Variables d'environnement : `DATABASE_URL`, `AUTH_SECRET`, `INVITE_CODE`, `APP_URL`, `AUTO_MIGRATE=1`
+3. Variables d'environnement : `DATABASE_URL` (ou l'intégration Supabase/Neon qui injecte `POSTGRES_URL`), `AUTH_SECRET`, `INVITE_CODE`, `APP_URL`
    (+ `TEAMS_WEBHOOK_URL`, `TEAMS_LANG`, `DEFAULT_LOCATION` si voulu).
-4. Déployer. Au premier appel, `AUTO_MIGRATE=1` crée les tables. Tu peux ensuite le retirer et
-   lancer `npm run db:migrate` à la main pour les prochaines migrations (`npm run db:generate`
-   après une modif du schéma).
+4. Déployer. Les migrations s'appliquent automatiquement pendant le build (`npm run build` lance
+   `db:migrate` avant `next build`). Après une modif du schéma : `npm run db:generate`, commit, push.
 5. Créer ton compte sur `/register` (le premier devient admin), partager le code d'invitation.
 
 ## Fonctionnalités

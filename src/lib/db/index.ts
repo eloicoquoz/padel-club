@@ -19,12 +19,11 @@ async function createDb(): Promise<DB> {
     // Production / staging : Postgres (Supabase, Neon, Vercel Postgres…)
     const { drizzle } = await import("drizzle-orm/postgres-js");
     const postgres = (await import("postgres")).default;
-    const client = postgres(url, { max: 5, prepare: false });
+    // Serverless : une connexion par instance, timeouts courts, pas de prepared statements (pooler).
+    const client = postgres(url, { max: 1, prepare: false, idle_timeout: 20, connect_timeout: 10 });
     const db = drizzle(client, { schema });
-    if (process.env.AUTO_MIGRATE === "1") {
-      const { migrate } = await import("drizzle-orm/postgres-js/migrator");
-      await migrate(db, { migrationsFolder: MIGRATIONS_FOLDER });
-    }
+    // Les migrations ne sont JAMAIS appliquées au démarrage en prod (verrous entre instances
+    // concurrentes) : elles tournent au build via `npm run db:migrate` (voir package.json).
     return db as unknown as DB;
   }
 
