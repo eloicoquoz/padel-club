@@ -12,7 +12,8 @@ declare global {
 }
 
 async function createDb(): Promise<DB> {
-  const url = process.env.DATABASE_URL;
+  // DATABASE_URL, sinon les variables injectées par les intégrations Vercel (Supabase / Neon).
+  const url = process.env.DATABASE_URL ?? process.env.POSTGRES_URL ?? process.env.POSTGRES_PRISMA_URL;
 
   if (url) {
     // Production / staging : Postgres (Supabase, Neon, Vercel Postgres…)

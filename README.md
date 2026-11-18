@@ -28,7 +28,7 @@ Code d'invitation par défaut : `GOTTERON`. Le premier compte créé est admin.
 
 | Variable             | Rôle                                                                                       |
 | -------------------- | ------------------------------------------------------------------------------------------ |
-| `DATABASE_URL`       | Postgres de prod. Absente → PGlite local dans `./.pglite`.                                 |
+| `DATABASE_URL`       | Postgres de prod (ou `POSTGRES_URL` injectée par l'intégration Supabase/Neon de Vercel). Absente → PGlite local. |
 | `AUTH_SECRET`        | Secret des sessions (obligatoire en prod, `openssl rand -base64 32`).                      |
 | `INVITE_CODE`        | Code d'invitation pour créer un compte (défaut `GOTTERON`).                                |
 | `APP_URL`            | URL publique (boutons des cartes Teams), ex. `https://padel.gotteron.ch`.                  |
