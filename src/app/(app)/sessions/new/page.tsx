@@ -8,7 +8,7 @@ export default async function NewSessionPage() {
   const { t } = await getT();
   return (
     <>
-      <PageHeader title={t.sessions.new.title} back="/sessions" />
+      <PageHeader tone="lime" icon="calendar" title={t.sessions.new.title} back="/sessions" />
       <SessionForm defaultLocation={process.env.DEFAULT_LOCATION ?? ""} />
     </>
   );

@@ -31,10 +31,12 @@ export default async function ChallengesPage() {
   return (
     <>
       <PageHeader
+        tone="blue"
+        icon="racket"
         title={t.challenges.title}
         back="/"
         right={
-          <Link href="/challenges/new" className="btn btn-sm bg-red text-white">
+          <Link href="/challenges/new" className="btn btn-sm bg-white text-black">
             <Icon name="plus" size={16} />
             {t.challenges.new}
           </Link>

@@ -29,7 +29,7 @@ export default async function NewMatchPage({ searchParams }: { searchParams: Pro
   }
   return (
     <>
-      <PageHeader title={t.match.newTitle} back="/" />
+      <PageHeader tone="red" icon="racket" title={t.match.newTitle} back="/" />
       <MatchForm players={players} meId={user.id} sessionId={sp.sessionId ?? null} challengeId={sp.challengeId ?? null} preset={preset} sessionLabel={sessionLabel} />
     </>
   );

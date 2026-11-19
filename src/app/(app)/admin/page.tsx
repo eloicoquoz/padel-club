@@ -13,7 +13,7 @@ export default async function AdminPage() {
   const [users, matches] = await Promise.all([listUsersAdmin(), recentMatchesAdmin(30)]);
   return (
     <>
-      <PageHeader title={t.admin.title} back="/profile" />
+      <PageHeader tone="ink" icon="settings" title={t.admin.title} back="/profile" />
       <AdminPanel
         users={users}
         matches={matches.map((m) => ({ id: m.id, playedAt: m.playedAt, score: formatSets(m.sets), winner: m.winner, names: m.names }))}

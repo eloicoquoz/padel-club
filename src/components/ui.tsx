@@ -7,8 +7,15 @@ export function Avatar({ name, color, size = 40, ring, className = "" }: { name:
   return (
     <div
       aria-hidden="true"
-      className={`flex items-center justify-center rounded-full font-extrabold text-bg shrink-0 ${className}`}
-      style={{ width: size, height: size, background: color, fontSize: fs, boxShadow: ring ? `0 0 0 3px ${ring}` : undefined }}
+      className={`flex items-center justify-center rounded-full font-black text-[#111214] shrink-0 ${className}`}
+      style={{
+        width: size,
+        height: size,
+        background: color,
+        fontSize: fs,
+        letterSpacing: "-0.02em",
+        boxShadow: ring ? `0 0 0 3px ${ring}, 0 4px 12px rgba(0,0,0,0.18)` : "0 2px 8px rgba(0,0,0,0.14)",
+      }}
     >
       {initials(name)}
     </div>
@@ -60,21 +67,96 @@ export function Pill({ children, tone = "muted" }: { children: ReactNode; tone?:
   return <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-extrabold whitespace-nowrap ${tones[tone]}`}>{children}</span>;
 }
 
-export function PageHeader({ title, eyebrow, back, right }: { title: string; eyebrow?: string; back?: string; right?: ReactNode }) {
-  return (
-    <div className="flex items-center justify-between gap-3">
-      <div className="flex items-center gap-3 min-w-0">
-        {back && (
-          <Link href={back} aria-label="Back" className="w-10 h-10 rounded-full bg-surface flex items-center justify-center shrink-0">
-            <Icon name="back" size={18} />
-          </Link>
-        )}
-        <div className="min-w-0">
-          {eyebrow && <div className="text-xs font-extrabold uppercase tracking-[0.12em] text-red-text">{eyebrow}</div>}
-          <h1 className="text-[28px] leading-tight font-black tracking-tight truncate first-letter:uppercase">{title}</h1>
+export type Tone = "red" | "lime" | "blue" | "gold" | "violet" | "ink";
+/** Couleurs « arcade » des bandeaux de page : fond + couleur du texte. */
+export const TONES: Record<Tone, { bg: string; fg: string; soft: string }> = {
+  red: { bg: "#E63946", fg: "#ffffff", soft: "rgba(255,255,255,0.18)" },
+  lime: { bg: "#D4F53C", fg: "#111214", soft: "rgba(0,0,0,0.10)" },
+  blue: { bg: "#2563EB", fg: "#ffffff", soft: "rgba(255,255,255,0.18)" },
+  gold: { bg: "#FFC53D", fg: "#111214", soft: "rgba(0,0,0,0.10)" },
+  violet: { bg: "#7C3AED", fg: "#ffffff", soft: "rgba(255,255,255,0.18)" },
+  ink: { bg: "#15161A", fg: "#ffffff", soft: "rgba(255,255,255,0.14)" },
+};
+
+export function PageHeader({
+  title,
+  eyebrow,
+  back,
+  right,
+  tone,
+  icon,
+  sub,
+}: {
+  title: string;
+  eyebrow?: string;
+  back?: string;
+  right?: ReactNode;
+  tone?: Tone;
+  icon?: IconName;
+  sub?: ReactNode;
+}) {
+  if (!tone) {
+    return (
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          {back && (
+            <Link href={back} aria-label="Back" className="w-10 h-10 rounded-full bg-surface flex items-center justify-center shrink-0">
+              <Icon name="back" size={18} />
+            </Link>
+          )}
+          <div className="min-w-0">
+            {eyebrow && <div className="text-xs font-extrabold uppercase tracking-[0.12em] text-red-text">{eyebrow}</div>}
+            <h1 className="text-[28px] leading-tight font-black tracking-tight truncate first-letter:uppercase">{title}</h1>
+          </div>
         </div>
+        {right}
       </div>
-      {right}
+    );
+  }
+  const c = TONES[tone];
+  return (
+    <div className="hero relative overflow-hidden" style={{ background: c.bg, color: c.fg }}>
+      <div className="pointer-events-none absolute -right-10 -top-16 w-56 h-56 rounded-full" style={{ background: c.soft }} />
+      <div className="pointer-events-none absolute -left-16 -bottom-24 w-48 h-48 rounded-full" style={{ background: c.soft }} />
+      {icon && (
+        <div className="pointer-events-none absolute right-4 bottom-2 opacity-[0.16] rotate-[-12deg]">
+          <Icon name={icon} size={120} />
+        </div>
+      )}
+      <div className="relative flex flex-wrap items-start justify-between gap-x-3 gap-y-3">
+        <div className="flex items-center gap-3 flex-1">
+          {back && (
+            <Link href={back} aria-label="Back" className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: c.soft }}>
+              <Icon name="back" size={18} />
+            </Link>
+          )}
+          <div className="min-w-0">
+            {eyebrow && <div className="text-[11px] font-extrabold uppercase tracking-[0.16em] opacity-80">{eyebrow}</div>}
+            <h1 className="text-[clamp(28px,9.5vw,40px)] leading-[0.95] font-black tracking-[-0.03em] uppercase break-normal first-letter:uppercase">{title}</h1>
+            {sub && <div className="mt-2 text-sm font-semibold opacity-85">{sub}</div>}
+          </div>
+        </div>
+        {right && <div className="shrink-0 pt-1 ml-auto">{right}</div>}
+      </div>
+    </div>
+  );
+}
+
+/** Segmented control pour les bandeaux colorés (ou neutre sans `onTone`). */
+export function Segmented({ items, onTone = false }: { items: { href: string; label: string; active: boolean }[]; onTone?: boolean }) {
+  return (
+    <div className={`flex gap-1 p-1 rounded-full ${onTone ? "bg-black/15" : "bg-surface"}`}>
+      {items.map((it) => (
+        <Link
+          key={it.href}
+          href={it.href}
+          className={`h-8 px-3 rounded-full text-xs font-extrabold flex items-center whitespace-nowrap ${
+            it.active ? (onTone ? "bg-white text-black" : "bg-text text-bg") : onTone ? "text-current opacity-80" : "text-muted"
+          }`}
+        >
+          {it.label}
+        </Link>
+      ))}
     </div>
   );
 }
@@ -92,7 +174,7 @@ export function Empty({ children }: { children: ReactNode }) {
   return <div className="card text-center text-muted text-sm py-8">{children}</div>;
 }
 
-type IconName = "home" | "ranking" | "plus" | "calendar" | "user" | "back" | "close" | "racket" | "flame" | "crown" | "external" | "shuffle" | "star" | "settings" | "refresh" | "trophy" | "check";
+export type IconName = "home" | "ranking" | "plus" | "calendar" | "user" | "back" | "close" | "racket" | "flame" | "crown" | "external" | "shuffle" | "star" | "settings" | "refresh" | "trophy" | "check";
 
 export function Icon({ name, size = 24, className = "" }: { name: IconName; size?: number; className?: string }) {
   const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2.2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true, className };

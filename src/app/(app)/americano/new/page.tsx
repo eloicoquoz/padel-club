@@ -10,7 +10,7 @@ export default async function NewTournamentPage() {
   const players = await listUsers();
   return (
     <>
-      <PageHeader title={t.americano.newTitle} back="/americano" />
+      <PageHeader tone="gold" icon="shuffle" title={t.americano.newTitle} back="/americano" />
       <TournamentForm players={players} meId={user.id} />
     </>
   );

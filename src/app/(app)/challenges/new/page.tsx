@@ -12,7 +12,7 @@ export default async function NewChallengePage({ searchParams }: { searchParams:
   const presetTo = (sp.to ?? "").split(",").filter(Boolean).slice(0, 2);
   return (
     <>
-      <PageHeader title={t.challenges.new} back="/challenges" />
+      <PageHeader tone="blue" icon="racket" title={t.challenges.new} back="/challenges" />
       <ChallengeForm players={players} meId={user.id} presetTo={presetTo} />
     </>
   );

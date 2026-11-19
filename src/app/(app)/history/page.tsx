@@ -4,7 +4,7 @@ import { getT } from "@/lib/i18n/server";
 import { relativeDay } from "@/lib/i18n";
 import { getMatches, getRatingHistory } from "@/lib/services/matches";
 import { MatchRow } from "@/components/match-row";
-import { Empty, PageHeader } from "@/components/ui";
+import { Empty, PageHeader, Segmented } from "@/components/ui";
 import { START_ELO } from "@/lib/elo";
 
 function Sparkline({ points, start }: { points: number[]; start: number }) {
@@ -43,19 +43,18 @@ export default async function HistoryPage({ searchParams }: { searchParams: Prom
   }
 
   const Toggle = () => (
-    <div className="flex gap-1 bg-surface p-1 rounded-full">
-      <Link href="/history" className={`h-8 px-3 rounded-full text-xs font-extrabold flex items-center ${mine ? "bg-text text-bg" : "text-muted"}`}>
-        {t.history.mine}
-      </Link>
-      <Link href="/history?all=1" className={`h-8 px-3 rounded-full text-xs font-extrabold flex items-center ${!mine ? "bg-text text-bg" : "text-muted"}`}>
-        {t.history.all}
-      </Link>
-    </div>
+    <Segmented
+      onTone
+      items={[
+        { href: "/history", label: t.history.mine, active: mine },
+        { href: "/history?all=1", label: t.history.all, active: !mine },
+      ]}
+    />
   );
 
   return (
     <>
-      <PageHeader title={t.history.title} back="/" right={<Toggle />} />
+      <PageHeader tone="violet" icon="refresh" title={t.history.title} back="/" right={<Toggle />} />
 
       {mine && points.length >= 2 && (
         <div className="card flex flex-col gap-2.5">

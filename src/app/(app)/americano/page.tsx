@@ -12,10 +12,12 @@ export default async function AmericanoListPage() {
   return (
     <>
       <PageHeader
+        tone="gold"
+        icon="shuffle"
         title={t.americano.title}
         back="/sessions"
         right={
-          <Link href="/americano/new" className="btn btn-sm bg-text text-bg">
+          <Link href="/americano/new" className="btn btn-sm bg-[#111214] text-white">
             <Icon name="plus" size={16} />
             {t.americano.newTitle}
           </Link>

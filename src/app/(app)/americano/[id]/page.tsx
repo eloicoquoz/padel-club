@@ -17,7 +17,7 @@ export default async function TournamentPage({ params }: { params: Promise<{ id:
   const canManage = tour.createdBy === user.id || user.isAdmin || tour.players.some((p) => p.id === user.id);
   return (
     <>
-      <PageHeader title={tour.name} back="/americano" eyebrow={t.americano.title} />
+      <PageHeader tone="gold" icon="trophy" title={tour.name} back="/americano" eyebrow={t.americano.title} />
       <AmericanoBoard t0={plain} meId={user.id} canManage={canManage} />
     </>
   );

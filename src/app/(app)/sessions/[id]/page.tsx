@@ -25,7 +25,7 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
 
   return (
     <>
-      <PageHeader title={formatDate(s.startsAt, locale, { weekday: "long", day: "numeric", month: "long" })} back="/sessions" eyebrow={full ? t.sessions.full : t.sessions.open} />
+      <PageHeader tone="lime" icon="calendar" title={formatDate(s.startsAt, locale, { weekday: "long", day: "numeric", month: "long" })} back="/sessions" eyebrow={full ? t.sessions.full : t.sessions.open} />
       <div className="text-[13px] text-muted -mt-2">
         {formatTime(s.startsAt, locale)} – {formatTime(new Date(s.startsAt.getTime() + s.durationMin * 60000), locale)}
         {s.location ? ` · ${s.location}` : ""} · {fmt(t.sessions.courts, { n: s.courts })}

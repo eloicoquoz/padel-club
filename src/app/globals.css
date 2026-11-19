@@ -265,3 +265,13 @@ button {
 .live {
   animation: pulse-dot 1.5s ease-in-out infinite;
 }
+
+/* Bandeau de page « arcade » : pleine largeur, remonte sous la barre de statut */
+.hero {
+  margin-left: -1.25rem;
+  margin-right: -1.25rem;
+  margin-top: calc(-1 * max(3.5rem, calc(env(safe-area-inset-top) + 1.25rem)));
+  padding: max(3.5rem, calc(env(safe-area-inset-top) + 1.25rem)) 1.25rem 1.5rem;
+  border-bottom-left-radius: 28px;
+  border-bottom-right-radius: 28px;
+}

@@ -4,7 +4,7 @@ import { getT } from "@/lib/i18n/server";
 import { fmt, formatMonth } from "@/lib/i18n";
 import { getRanking } from "@/lib/services/users";
 import { listSeasons, monthDate, monthKey, monthStandings } from "@/lib/services/seasons";
-import { Avatar, Empty, Icon, PageHeader, Pill } from "@/components/ui";
+import { Avatar, Empty, Icon, PageHeader, Pill, Segmented } from "@/components/ui";
 
 export default async function RankingPage({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
   const user = await requireUser();
@@ -16,14 +16,12 @@ export default async function RankingPage({ searchParams }: { searchParams: Prom
   const heights = [72, 100, 56];
 
   const Toggle = () => (
-    <div className="flex gap-1 bg-surface p-1 rounded-full">
-      <Link href="/ranking?view=month" className={`h-8 px-3 rounded-full text-xs font-extrabold flex items-center ${monthView ? "bg-text text-bg" : "text-muted"}`}>
-        {t.seasons.month}
-      </Link>
-      <Link href="/ranking" className={`h-8 px-3 rounded-full text-xs font-extrabold flex items-center ${!monthView ? "bg-text text-bg" : "text-muted"}`}>
-        {t.seasons.allTime}
-      </Link>
-    </div>
+    <Segmented
+      items={[
+        { href: "/ranking?view=month", label: t.seasons.month, active: monthView },
+        { href: "/ranking", label: t.seasons.allTime, active: !monthView },
+      ]}
+    />
   );
 
   // Lignes à afficher : général (Elo) ou mois (Elo gagné)
@@ -36,7 +34,10 @@ export default async function RankingPage({ searchParams }: { searchParams: Prom
 
   return (
     <>
-      <PageHeader title={t.ranking.title} eyebrow={monthView ? formatMonth(new Date(), locale) : t.seasons.allTime} right={<Toggle />} />
+      <PageHeader tone="red" icon="trophy" title={t.ranking.title} eyebrow={monthView ? formatMonth(new Date(), locale) : t.seasons.allTime} />
+      <div className="flex justify-center -mt-2">
+        <Toggle />
+      </div>
 
       {rows.length === 0 ? (
         <Empty>{monthView ? t.seasons.noMatchesMonth : t.ranking.noPlayers}</Empty>
@@ -53,7 +54,7 @@ export default async function RankingPage({ searchParams }: { searchParams: Prom
                     className={`w-full rounded-t-[14px] flex flex-col items-center justify-center gap-0.5 ${i === 1 ? "bg-red text-white" : "bg-surface-2"}`}
                     style={{ height: heights[i] }}
                   >
-                    <div className={`font-black ${i === 1 ? "text-3xl" : "text-[22px]"}`} style={{ color: i === 1 ? "#fff" : medal[i] }}>
+                    <div className={`font-black tracking-tighter ${i === 1 ? "text-[44px] leading-none" : "text-[30px] leading-none"}`} style={{ color: i === 1 ? "#fff" : medal[i] }}>
                       {p.rank}
                     </div>
                     <div className={`text-xs font-bold ${i === 1 ? "opacity-90" : "text-muted"}`}>{p.main}</div>
@@ -74,7 +75,7 @@ export default async function RankingPage({ searchParams }: { searchParams: Prom
                   href={`/profile/${r.id}`}
                   className={`flex items-center gap-3 rounded-2xl px-3.5 py-3 border ${me ? "bg-blue-bg border-blue" : "bg-surface border-border"}`}
                 >
-                  <div className="w-7 text-center text-base font-black text-muted">{r.rank}</div>
+                  <div className="w-7 text-center text-xl font-black text-dim">{r.rank}</div>
                   <Avatar name={r.name} color={r.color} size={38} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
@@ -84,7 +85,7 @@ export default async function RankingPage({ searchParams }: { searchParams: Prom
                     </div>
                     <div className="text-xs text-muted truncate">{r.sub}</div>
                   </div>
-                  <div className="text-base font-black">{r.main}</div>
+                  <div className="text-[22px] font-black tracking-tight">{r.main}</div>
                 </Link>
               );
             })}

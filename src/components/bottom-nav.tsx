@@ -28,9 +28,11 @@ export function BottomNav() {
               key={it.href}
               href={it.href}
               aria-label={it.label}
-              className={`flex flex-col items-center gap-1 w-14 text-[10px] font-bold ${it.active ? "text-red-text" : "text-muted"}`}
+              className={`flex flex-col items-center gap-1 w-14 text-[10px] font-extrabold ${it.active ? "text-text" : "text-muted"}`}
             >
-              <Icon name={it.icon} size={24} />
+              <span className={`flex items-center justify-center w-11 h-7 rounded-full transition ${it.active ? "bg-red text-white" : ""}`}>
+                <Icon name={it.icon} size={22} />
+              </span>
               {it.label}
             </Link>
           ) : (

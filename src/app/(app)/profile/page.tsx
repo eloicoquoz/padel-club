@@ -4,7 +4,6 @@ import { ProfileView } from "@/components/profile-view";
 import { ProfileForm } from "@/components/profile-form";
 import { cookies } from "next/headers";
 import { DEFAULT_THEME, THEME_COOKIE, isTheme } from "@/lib/theme";
-import { Eyebrow } from "@/components/ui";
 import { PushToggle } from "@/components/push-toggle";
 import { PasswordForm } from "@/components/password-form";
 import Link from "next/link";
@@ -16,9 +15,6 @@ export default async function MyProfilePage() {
   const { t, locale } = await getT();
   return (
     <>
-      <div className="text-center">
-        <Eyebrow>{t.profile.title}</Eyebrow>
-      </div>
       <ProfileView p={user} t={t} locale={locale} isMe />
       <PushToggle publicKey={process.env.VAPID_PUBLIC_KEY ?? null} />
       <ProfileForm user={user} theme={theme} />

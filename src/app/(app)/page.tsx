@@ -29,42 +29,44 @@ export default async function HomePage() {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="text-[13px] text-muted font-medium">{formatDate(new Date(), locale, { weekday: "long", day: "numeric", month: "long" })}</div>
-          <div className="text-[26px] font-black tracking-tight">{fmt(t.home.hello, { name: user.name })}</div>
+      <div className="hero relative overflow-hidden bg-red text-white">
+        <div className="pointer-events-none absolute -right-12 -top-20 w-64 h-64 rounded-full bg-white/15" />
+        <div className="pointer-events-none absolute -left-20 bottom-[-120px] w-56 h-56 rounded-full bg-black/10" />
+        <div className="relative flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-extrabold uppercase tracking-[0.16em] opacity-80">{formatDate(new Date(), locale, { weekday: "long", day: "numeric", month: "long" })}</div>
+            <div className="text-[34px] leading-none font-black tracking-[-0.03em] uppercase mt-1">{fmt(t.home.hello, { name: user.name })}</div>
+          </div>
+          <div className="flex items-center gap-2.5">
+            {user.streak >= 2 && (
+              <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-black/15 text-[13px] font-extrabold" title={fmt(t.home.streak, { n: user.streak })}>
+                <Icon name="flame" size={14} />
+                {user.streak}
+              </div>
+            )}
+            <Link href="/profile" aria-label={t.nav.profile}>
+              <Avatar name={user.name} color={user.color} size={44} ring="rgba(255,255,255,0.6)" />
+            </Link>
+          </div>
         </div>
-        <div className="flex items-center gap-2.5">
-          {user.streak >= 2 && (
-            <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-amber-bg text-amber text-[13px] font-extrabold" title={fmt(t.home.streak, { n: user.streak })}>
-              <Icon name="flame" size={14} />
-              {user.streak}
+        <Link href="/ranking" className="relative mt-5 flex items-end justify-between gap-3">
+          <div className="flex flex-col">
+            <div className="text-[11px] font-extrabold uppercase tracking-[0.16em] opacity-80">{t.home.yourRank}</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-[84px] font-black leading-[0.85] tracking-[-0.05em]">{me ? `#${me.rank}` : "—"}</span>
+              <span className="text-[17px] font-extrabold opacity-90">{user.elo} Elo</span>
             </div>
-          )}
-          <Link href="/profile" aria-label={t.nav.profile}>
-            <Avatar name={user.name} color={user.color} size={40} />
-          </Link>
-        </div>
+            <div className="text-[13px] font-bold opacity-90 mt-1">
+              {weekDelta !== 0 ? `${weekDelta > 0 ? "+" : ""}${weekDelta} Elo · ` : ""}
+              {fmt(t.home.rankMove, { move: weekDelta > 0 ? "↑" : weekDelta < 0 ? "↓" : "=" })}
+            </div>
+          </div>
+          <div className="flex flex-col items-center gap-0.5 bg-white text-[#111214] rounded-2xl px-3 py-2.5 max-w-[130px] text-center rotate-[-3deg] shadow-[0_6px_20px_rgba(0,0,0,0.2)]">
+            <div className="text-[10px] font-extrabold uppercase tracking-wider opacity-60">{t.home.title}</div>
+            <div className="text-[13px] font-black leading-tight">{t.profile.titles[title.key]}</div>
+          </div>
+        </Link>
       </div>
-
-      <Link href="/ranking" className="relative overflow-hidden flex items-center justify-between rounded-[22px] bg-red text-white px-5 py-4.5">
-        <div className="pointer-events-none absolute -right-8 -top-10 w-40 h-40 rounded-full bg-white opacity-[0.08]" />
-        <div className="flex flex-col gap-0.5">
-          <div className="text-xs font-bold uppercase tracking-[0.1em] opacity-85">{t.home.yourRank}</div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-[44px] font-black leading-none tracking-tighter">{me ? `#${me.rank}` : "—"}</span>
-            <span className="text-[15px] font-bold opacity-90">{user.elo} Elo</span>
-          </div>
-          <div className="text-[13px] font-semibold opacity-90">
-            {weekDelta !== 0 ? `${weekDelta > 0 ? "+" : ""}${weekDelta} Elo · ` : ""}
-            {fmt(t.home.rankMove, { move: weekDelta > 0 ? "↑" : weekDelta < 0 ? "↓" : "=" })}
-          </div>
-        </div>
-        <div className="flex flex-col items-center gap-0.5 bg-white/15 text-white rounded-2xl px-3 py-2.5 max-w-[120px] text-center">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-white/70">{t.home.title}</div>
-          <div className="text-[13px] font-black leading-tight">{t.profile.titles[title.key]}</div>
-        </div>
-      </Link>
 
       <div className="card flex flex-col gap-2.5">
         <div className="flex items-center justify-between">

@@ -11,7 +11,7 @@ import { BADGE_KEYS, isBadgeKey } from "@/lib/badges";
 import { Avatar, Icon, StatTile } from "./ui";
 import { BadgeGrid } from "./badge-grid";
 
-export async function ProfileView({ p, t, locale, isMe }: { p: PublicUser; t: Dict; locale: Locale; isMe: boolean }) {
+export async function ProfileView({ p, t, locale, isMe, back }: { p: PublicUser; t: Dict; locale: Locale; isMe: boolean; back?: string }) {
   const db = await getDb();
   const [ranking, stats, badgeRows] = await Promise.all([
     getRanking(),
@@ -26,34 +26,40 @@ export async function ProfileView({ p, t, locale, isMe }: { p: PublicUser; t: Di
 
   return (
     <>
-      <div className="relative flex flex-col items-center gap-2 pt-2 -mx-5 px-5 overflow-hidden">
-        <div className="pointer-events-none absolute -top-40 left-1/2 -ml-[200px] w-[400px] h-[400px] rounded-full bg-blue opacity-[0.14]" />
+      <div className="hero relative overflow-hidden flex flex-col items-center gap-2 text-[#111214]" style={{ background: p.color }}>
+        <div className="pointer-events-none absolute -right-12 -top-16 w-60 h-60 rounded-full bg-white/25" />
+        <div className="pointer-events-none absolute -left-16 -bottom-20 w-48 h-48 rounded-full bg-black/10" />
+        {back && (
+          <Link href={back} aria-label="Back" className="absolute left-5 w-10 h-10 rounded-full bg-black/10 flex items-center justify-center" style={{ top: "max(3.5rem, calc(env(safe-area-inset-top) + 1.25rem))" }}>
+            <Icon name="back" size={18} />
+          </Link>
+        )}
         <div className="relative">
-          <Avatar name={p.name} color={p.color} size={92} ring="var(--color-gold)" />
+          <Avatar name={p.name} color="#ffffff" size={96} ring="rgba(0,0,0,0.15)" />
           {rank && (
-            <div className="absolute -bottom-1.5 left-1/2 -ml-7 w-14 h-6 rounded-full bg-gold text-bg text-xs font-black flex items-center justify-center">#{rank}</div>
+            <div className="absolute -bottom-2 left-1/2 -ml-8 w-16 h-7 rounded-full bg-[#111214] text-white text-sm font-black flex items-center justify-center">#{rank}</div>
           )}
         </div>
-        <div className="text-2xl font-black tracking-tight mt-2">{p.name}</div>
-        <div className="flex items-center gap-2">
-          <div className="text-[13px] font-bold text-gold">{t.profile.titles[title.key]}</div>
+        <div className="relative text-[40px] leading-none font-black tracking-[-0.03em] uppercase mt-3 text-center break-words max-w-full">{p.name}</div>
+        <div className="relative flex items-center gap-2">
+          <div className="text-[13px] font-extrabold">{t.profile.titles[title.key]}</div>
           {p.playtomicLevel && (
             <a
               href={p.playtomicUrl ?? "https://app.playtomic.io"}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface border border-border text-[11px] font-extrabold text-muted"
+              className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/10 text-[11px] font-extrabold"
             >
               Playtomic {p.playtomicLevel}
               <Icon name="external" size={12} />
             </a>
           )}
         </div>
-        <div className="w-full flex flex-col gap-1.5 mt-1">
-          <div className="h-2 rounded-full bg-surface overflow-hidden">
-            <div className="h-full rounded-full bg-gold" style={{ width: `${progress}%` }} />
+        <div className="relative w-full flex flex-col gap-1.5 mt-1">
+          <div className="h-2.5 rounded-full bg-black/10 overflow-hidden">
+            <div className="h-full rounded-full bg-[#111214]" style={{ width: `${progress}%` }} />
           </div>
-          <div className="flex justify-between text-[11px] text-muted font-semibold">
+          <div className="flex justify-between text-[11px] font-bold opacity-80">
             <span>{p.elo} Elo</span>
             <span>{title.next ? fmt(t.profile.nextTitle, { n: title.next.missing, title: t.profile.titles[title.next.key] }) : t.profile.titles.legend}</span>
           </div>

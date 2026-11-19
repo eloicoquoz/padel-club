@@ -16,9 +16,11 @@ export default async function SessionsPage() {
   return (
     <>
       <PageHeader
+        tone="lime"
+        icon="calendar"
         title={t.sessions.title}
         right={
-          <Link href="/sessions/new" className="btn btn-sm bg-text text-bg">
+          <Link href="/sessions/new" className="btn btn-sm bg-[#111214] text-white">
             <Icon name="plus" size={16} />
             {t.sessions.propose}
           </Link>
