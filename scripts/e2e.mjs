@@ -168,18 +168,18 @@ await step("americano", async () => {
 
 await step("profile + language switch", async () => {
   await page.goto(BASE + "/profile");
-  await page.waitForSelector("text=Mon profil");
+  await page.waitForSelector("text=Langue de l'app");
   await page.screenshot({ path: `${shots}/12-profile.png`, fullPage: true });
   await page.click("form button:has-text('de')");
   await page.click("text=Enregistrer");
-  await page.waitForSelector("text=Mein Profil", { timeout: 10000 });
+  await page.waitForSelector("text=Sprache der App", { timeout: 10000 });
   await page.goto(BASE + "/");
   await page.waitForSelector("text=Hoi Eloi");
   await page.screenshot({ path: `${shots}/13-home-de.png`, fullPage: true });
   await page.goto(BASE + "/profile");
   await page.click("form button:has-text('fr')");
   await page.click("text=Speichern");
-  await page.waitForSelector("text=Mon profil", { timeout: 10000 });
+  await page.waitForSelector("text=Langue de l'app", { timeout: 10000 });
 });
 
 
