@@ -21,9 +21,9 @@ export function BadgeGrid({ earned }: { earned: BadgeKey[] }) {
               type="button"
               aria-label={t.badges[k].name}
               onClick={() => setSel(k)}
-              className={`flex flex-col items-center gap-1.5 p-2.5 rounded-2xl border ${active ? "border-gold" : on ? "border-border" : "border-[#1C1D23]"} ${on ? "bg-surface" : "bg-[#0E0E11]"}`}
+              className={`flex flex-col items-center gap-1.5 p-2.5 rounded-2xl border ${active ? "border-gold" : on ? "border-border" : "border-border"} ${on ? "bg-surface" : "bg-surface-2 opacity-70"}`}
             >
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${on ? "bg-amber-bg text-amber" : "bg-surface text-[#3A3B45]"}`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${on ? "bg-amber-bg text-amber" : "bg-bg text-dim"}`}>
                 <Icon name="star" size={20} />
               </div>
               <div className={`text-[10px] font-bold text-center leading-tight ${on ? "text-text" : "text-dim"}`}>{t.badges[k].name}</div>

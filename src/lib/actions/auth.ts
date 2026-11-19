@@ -73,6 +73,12 @@ export async function logoutAction() {
 }
 
 /** Change la langue (cookie + profil si connecté). */
+export async function setThemeAction(theme: string) {
+  const { THEME_COOKIE, isTheme } = await import("@/lib/theme");
+  if (!isTheme(theme)) return;
+  (await cookies()).set(THEME_COOKIE, theme, { path: "/", maxAge: 365 * 24 * 3600, sameSite: "lax" });
+}
+
 export async function setLocaleAction(locale: string) {
   if (!isLocale(locale)) return;
   (await cookies()).set(LOCALE_COOKIE, locale, { path: "/", maxAge: 365 * 24 * 3600, sameSite: "lax" });

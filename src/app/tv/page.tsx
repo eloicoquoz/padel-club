@@ -54,7 +54,7 @@ export default async function TvPage({ searchParams }: { searchParams: Promise<{
   const ticker = newsText.length ? [...newsText, ...newsText] : [t.tv.noMatchYet, t.tv.noMatchYet];
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-bg text-text flex flex-col" style={{ fontSize: "min(1.25vw, 0.9vh * 1.78)" }}>
+    <div data-theme="dark" className="relative w-screen h-screen overflow-hidden bg-bg text-text flex flex-col" style={{ fontSize: "min(1.25vw, 0.9vh * 1.78)" }}>
       <div className="pointer-events-none absolute -top-[16%] -right-[10%] w-[47%] aspect-square rounded-full bg-red opacity-[0.12]" />
       <div className="pointer-events-none absolute -bottom-[37%] -left-[10%] w-[42%] aspect-square rounded-full bg-blue opacity-[0.10]" />
 

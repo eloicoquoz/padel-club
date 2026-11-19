@@ -330,6 +330,7 @@ export const de: Dict = {
     closed: "Monat abgeschlossen.",
     nothing: "Nichts abzuschliessen (schon erledigt oder kein Spiel).",
   },
+  theme: { label: "Darstellung", light: "Hell", dark: "Dunkel", auto: "Auto" },
   push: {
     title: "Benachrichtigungen",
     enable: "Aktivieren",

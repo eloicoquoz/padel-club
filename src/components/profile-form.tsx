@@ -9,8 +9,10 @@ import { LOCALES } from "@/lib/i18n";
 import { AVATAR_COLORS } from "@/lib/colors";
 import type { User } from "@/lib/db/schema";
 import { Icon } from "./ui";
+import { ThemeSwitch } from "./theme-switch";
+import type { Theme } from "@/lib/theme";
 
-export function ProfileForm({ user }: { user: Pick<User, "name" | "locale" | "color" | "playtomicLevel" | "playtomicUrl"> }) {
+export function ProfileForm({ user, theme }: { user: Pick<User, "name" | "locale" | "color" | "playtomicLevel" | "playtomicUrl">; theme: Theme }) {
   const { t } = useT();
   const router = useRouter();
   const [state, action, pending] = useActionState(async (prev: { error?: string } | null, fd: FormData) => {
@@ -41,6 +43,7 @@ export function ProfileForm({ user }: { user: Pick<User, "name" | "locale" | "co
           ))}
         </div>
       </div>
+      <ThemeSwitch initial={theme} />
       <div className="flex flex-col gap-2">
         <div className="label">{t.profile.color}</div>
         <input type="hidden" name="color" value={color} />

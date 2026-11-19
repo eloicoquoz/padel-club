@@ -76,7 +76,7 @@ export async function ProfileView({ p, t, locale, isMe }: { p: PublicUser; t: Di
       </div>
 
       <div className="grid grid-cols-2 gap-2.5">
-        <div className="flex items-center gap-2.5 rounded-2xl bg-green-bg-2 border border-[#1F4D33] p-3">
+        <div className="flex items-center gap-2.5 rounded-2xl bg-green-bg-2 border border-green-border p-3">
           {stats.bestPartner ? (
             <>
               <Avatar name={stats.bestPartner.user.name} color={stats.bestPartner.user.color} size={36} />
@@ -91,7 +91,7 @@ export async function ProfileView({ p, t, locale, isMe }: { p: PublicUser; t: Di
             <div className="text-xs text-muted">{t.profile.noData}</div>
           )}
         </div>
-        <div className="flex items-center gap-2.5 rounded-2xl bg-red-bg border border-[#6B1C24] p-3">
+        <div className="flex items-center gap-2.5 rounded-2xl bg-red-bg border border-red-border p-3">
           {stats.nemesis ? (
             <>
               <Avatar name={stats.nemesis.user.name} color={stats.nemesis.user.color} size={36} />

@@ -3,6 +3,8 @@ import "./globals.css";
 import { getT } from "@/lib/i18n/server";
 import { I18nProvider } from "@/lib/i18n/client";
 import { PwaRegister } from "@/components/pwa";
+import { cookies } from "next/headers";
+import { DEFAULT_THEME, THEME_COOKIE, isTheme } from "@/lib/theme";
 
 export const metadata: Metadata = {
   title: "Padel Club · Fribourg-Gottéron",
@@ -13,7 +15,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b0b0d",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f4f3f0" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0b0d" },
+  ],
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -21,8 +26,10 @@ export const viewport: Viewport = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { locale, t } = await getT();
+  const raw = (await cookies()).get(THEME_COOKIE)?.value;
+  const theme = isTheme(raw) ? raw : DEFAULT_THEME;
   return (
-    <html lang={locale} className="h-full antialiased">
+    <html lang={locale} data-theme={theme} className="h-full antialiased">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

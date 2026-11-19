@@ -60,8 +60,8 @@ export default async function HomePage() {
             {fmt(t.home.rankMove, { move: weekDelta > 0 ? "↑" : weekDelta < 0 ? "↓" : "=" })}
           </div>
         </div>
-        <div className="flex flex-col items-center gap-0.5 bg-bg text-text rounded-2xl px-3 py-2.5 max-w-[120px] text-center">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-muted">{t.home.title}</div>
+        <div className="flex flex-col items-center gap-0.5 bg-white/15 text-white rounded-2xl px-3 py-2.5 max-w-[120px] text-center">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-white/70">{t.home.title}</div>
           <div className="text-[13px] font-black leading-tight">{t.profile.titles[title.key]}</div>
         </div>
       </Link>

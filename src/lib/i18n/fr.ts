@@ -328,6 +328,7 @@ export const fr = {
     closed: "Mois clôturé.",
     nothing: "Rien à clôturer (déjà fait ou aucun match).",
   },
+  theme: { label: "Apparence", light: "Clair", dark: "Sombre", auto: "Auto" },
   push: {
     title: "Notifications",
     enable: "Activer",

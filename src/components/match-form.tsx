@@ -174,7 +174,7 @@ export function MatchForm({ players, meId, sessionId, challengeId, preset, sessi
       </section>
 
       {fc && (
-        <div className="flex items-center gap-2.5 rounded-2xl bg-green-bg-2 border border-[#1F4D33] px-3.5 py-3 text-[13px] text-muted">
+        <div className="flex items-center gap-2.5 rounded-2xl bg-green-bg-2 border border-green-border px-3.5 py-3 text-[13px] text-muted">
           <Icon name="flame" size={18} className="text-green" />
           <div>
             <span className="font-extrabold text-green">{fmt(t.match.forecastWin, { n: fc.win })}</span> {fc.favoritesB ? t.match.favorites : ""} ·{" "}

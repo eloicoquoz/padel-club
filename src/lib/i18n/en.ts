@@ -330,6 +330,7 @@ export const en: Dict = {
     closed: "Month closed.",
     nothing: "Nothing to close (already done or no match).",
   },
+  theme: { label: "Appearance", light: "Light", dark: "Dark", auto: "Auto" },
   push: {
     title: "Notifications",
     enable: "Enable",

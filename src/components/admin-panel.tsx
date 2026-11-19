@@ -57,7 +57,7 @@ export function AdminPanel({ users, matches, meId }: { users: U[]; matches: M[];
                 disabled={pending || u.id === meId}
                 aria-label={t.admin.makeAdmin}
                 onClick={() => start(() => adminSetAdminAction(u.id, !u.isAdmin))}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center border ${u.isAdmin ? "bg-amber-bg border-[#7C3F10] text-amber" : "bg-bg border-border-2 text-dim"}`}
+                className={`w-8 h-8 rounded-lg flex items-center justify-center border ${u.isAdmin ? "bg-amber-bg border-amber-border text-amber" : "bg-bg border-border-2 text-dim"}`}
               >
                 <Icon name="star" size={14} />
               </button>
@@ -110,7 +110,7 @@ export function AdminPanel({ users, matches, meId }: { users: U[]; matches: M[];
           type="button"
           disabled={pending}
           onClick={() => start(async () => { const r = await adminCloseMonthAction("previous"); setToast(r.closed ? t.seasons.closed : t.seasons.nothing); setTimeout(() => setToast(null), 6000); })}
-          className="btn bg-amber-bg border border-[#7C3F10] text-amber h-12 text-[15px] mt-2"
+          className="btn bg-amber-bg border border-amber-border text-amber h-12 text-[15px] mt-2"
         >
           <Icon name="crown" size={18} />
           {t.seasons.closePrev}

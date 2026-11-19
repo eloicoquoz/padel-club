@@ -20,7 +20,7 @@ function Sparkline({ points, start }: { points: number[]; start: number }) {
   const color = up ? "var(--color-green)" : "var(--color-red-text)";
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-[70px]" role="img" aria-label="Elo">
-      <line x1="0" y1={y(start)} x2={w} y2={y(start)} stroke="#2A2B33" strokeWidth="1" strokeDasharray="3 4" />
+      <line x1="0" y1={y(start)} x2={w} y2={y(start)} stroke="var(--color-border-2)" strokeWidth="1" strokeDasharray="3 4" />
       <polyline points={d} fill="none" stroke={color} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
       <circle cx={x(points.length - 1)} cy={y(points[points.length - 1])} r="4" fill={color} />
       <circle cx={x(points.length - 1)} cy={y(points[points.length - 1])} r="8" fill={color} opacity="0.25" />

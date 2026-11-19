@@ -95,7 +95,7 @@ export default async function MatchPage({ params, searchParams }: { params: Prom
     );
   }
 
-  const confettiColors = ["#FFC53D", "#E63946", "#3B82F6", "#D4F53C", "#F5F5F7", "#FFC53D", "#E63946"];
+  const confettiColors = ["#FFC53D", "#E63946", "#3B82F6", "#D4F53C", "#3B82F6", "#FFC53D", "#E63946"];
 
   return (
     <div className="relative -mx-5 px-6 pt-4 pb-32 min-h-dvh flex flex-col overflow-hidden">
@@ -123,7 +123,7 @@ export default async function MatchPage({ params, searchParams }: { params: Prom
       </div>
 
       <div className="pop relative grid grid-cols-2 gap-2.5 mt-7" style={{ animationDelay: ".4s" }}>
-        <div className={`flex flex-col gap-1 rounded-[20px] border p-4 ${won ? "bg-green-bg-2 border-[#1F4D33]" : "bg-red-bg border-[#6B1C24]"}`}>
+        <div className={`flex flex-col gap-1 rounded-[20px] border p-4 ${won ? "bg-green-bg-2 border-green-border" : "bg-red-bg border-red-border"}`}>
           <div className="text-[11px] font-extrabold uppercase tracking-[0.1em] text-muted">Elo</div>
           <div className={`text-[34px] font-black leading-none ${won ? "text-green" : "text-red-text"}`}>
             {myDelta > 0 ? "+" : ""}
@@ -164,7 +164,7 @@ export default async function MatchPage({ params, searchParams }: { params: Prom
 
       {badgeRows.map((b) =>
         isBadgeKey(b.badge) ? (
-          <div key={b.id} className="pop relative flex items-center gap-3 rounded-2xl bg-amber-bg border border-[#7C3F10] px-3.5 py-3 mt-3" style={{ animationDelay: ".75s" }}>
+          <div key={b.id} className="pop relative flex items-center gap-3 rounded-2xl bg-amber-bg border border-amber-border px-3.5 py-3 mt-3" style={{ animationDelay: ".75s" }}>
             <Icon name="star" size={32} className="text-amber" />
             <div>
               <div className="text-[11px] font-extrabold uppercase tracking-[0.1em] text-amber">{t.result.newBadge}</div>

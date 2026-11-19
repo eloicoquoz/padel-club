@@ -63,7 +63,7 @@ export default async function ChallengesPage() {
       <div className="flex flex-col gap-2.5">
         <Eyebrow>{t.challenges.weekly}</Eyebrow>
         <div className="grid grid-cols-2 gap-2.5">
-          <div className={`flex flex-col gap-1.5 rounded-[18px] border p-3.5 ${newPartnerThisWeek ? "bg-green-bg-2 border-[#1F4D33]" : "bg-amber-bg border-[#7C3F10]"}`}>
+          <div className={`flex flex-col gap-1.5 rounded-[18px] border p-3.5 ${newPartnerThisWeek ? "bg-green-bg-2 border-green-border" : "bg-amber-bg border-amber-border"}`}>
             <div className={`text-[11px] font-extrabold uppercase tracking-wider ${newPartnerThisWeek ? "text-green" : "text-amber"}`}>{newPartnerThisWeek ? "✓" : "Bonus"}</div>
             <div className="text-sm font-extrabold leading-tight">{t.challenges.weeklyNewPartner}</div>
             <div className="text-xs text-muted">{newPartnerThisWeek ? "1/1" : "0/1"}</div>
